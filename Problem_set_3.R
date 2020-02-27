@@ -122,12 +122,12 @@ p
 
 #darkmode
 p+theme_dark()
+
+# more
 p+ theme_classic() +
   labs(title="Endorsements of Candidates",x="Candidate", y="Endorsement", color = "Candidates") +
   theme(axis.text.x=element_text(angle=20, hjust=1, size=9)) 
   
-
-## More 
 
 
 #Q4
@@ -143,41 +143,58 @@ tweets <- tweets%>%
 range(tweets$date)
 ### [1] "1/1/2014" "9/9/2019"
 
-
 # 2nd Task - dpylr subset to remove retweers & show top 5 texts 
-## Retweet : RT @ or column <- decide to use the column
+## Retweet : already have is_retweet column
 realTrump <- tweets %>%
   filter(is_retweet=="FALSE")
 ## removed retweers and show the text of top 5 
-realTrump[match(tail(sort(realTrump$favorite_count),5),realTrump$favorite_count),]
-realTrump[match(tail(sort(realTrump$retweet_count),5),realTrump$retweet_count),]
+## tried to use arrange ( desc())
+top5pop <- realTrump %>% arrange(desc(favorite_count)) 
+top5ret <- realTrump %>% arrange(desc(retweet_count))
+top5pop[1:5,]$text
+###[1] "A$AP Rocky released from prison and on his way home to the United States from Sweden. It was a Rocky Week get home ASAP A$AP!"                                                                                                                                                             
+###[2] "https://t.co/VXeKiVzpTf"                                                                                                                                                                                                                                                                   
+###[3] "All is well! Missiles launched from Iran at two military bases located in Iraq. Assessment of casualties &amp; damages taking place now. So far so good! We have the most powerful and well equipped military anywhere in the world by far! I will be making a statement tomorrow morning."
+###[4] "MERRY CHRISTMAS!"                                                                                                                                                                                                                                                                          
+###[5] "Kobe Bryant despite being one of the truly great basketball players of all time was just getting started in life. He loved his family so much and had such strong passion for the future. The loss of his beautiful daughter Gianna makes this moment even more devastating...."   
+top5ret[1:5,]$text
+###[1] "#FraudNewsCNN #FNN https://t.co/WYUnHjjUjg"                                                                                                                                       
+###[2] "TODAY WE MAKE AMERICA GREAT AGAIN!"                                                                                                                                               
+###[3] "Why would Kim Jong-un insult me by calling me \"old\" when I would NEVER call him \"short and fat?\" Oh well I try so hard to be his friend - and maybe someday that will happen!"
+###[4] "A$AP Rocky released from prison and on his way home to the United States from Sweden. It was a Rocky Week get home ASAP A$AP!"                                                    
+###[5] "Such a beautiful and important evening! The forgotten man and woman will never be forgotten again. We will all come together as never before"  
 
-#3rd Task - Incomplete
+#3rd Task -
 ## Remove whitespace & remove numbers and puncuation, convert everything to lowercase 
 ## package tm does these for me
 ## https://www.rdocumentation.org/packages/tm/versions/0.7-7
 temp = realTrump
-
 tempLine= temp$text
 
+## all from tm 
 tempLine <-removePunctuation(tempLine) 
 tempLine <-removeNumbers(tempLine)
 tempLine <-tolower(tempLine)
-tempLine <-stripWhitespace(tempLine)
-tempLine <-str_remove(tempLine,"@")
+tempLine <- stripWhitespace(tempLine)
+# deleting regular  + suggested stopwords
 tempLine <-removeWords(tempLine, stopwords("english"))
 tempLine <-removeWords(tempLine, c("see", "people","new","want","one","even","must","need", "done","back",
                                     "just","going", "know", "can", "said", "like","many","like","realdonaldtrump"))
-
 # 4th wordcloud -> visualize top 50 words 
+##https://www.rdocumentation.org/packages/tm/versions/0.7-7/topics/Corpus
+## http://lab.rady.ucsd.edu/sawtooth/business_analytics_in_r/corpus_summary.html
 tempCor <- Corpus(VectorSource(tempLine))
-wordcloud(tempCor,max.words = 50,random.order=FALSE,scale=c(.5,1))
+wordcloud(tempCor,max.words = 50,random.order=FALSE,scale=c(.5,.9))
 
 ## https://www.rdocumentation.org/packages/wordcloud/versions/2.6/topics/wordcloud
-#5th
-fifth <- DocumentTermMatrix(tempCor,control = list(weighting = weightTfIdf))
-
-#6th
+#5thtask
+## tried to understand what dtm is https://en.wikipedia.org/wiki/Document-term_matrix
+## guess we need to make a matrix
+## looked at this 
+fifth <- DocumentTermMatrix(tempCor,control = list(weighting = weightTfIdf,wordLengths=c(1, Inf)))
+fifth
+#6th task
+## https://www.rdocumentation.org/packages/tm/versions/0.7-7/topics/findFreqTerms
 freq6<-findFreqTerms(fifth, lowfreq = 0.8)
 freq6
 
