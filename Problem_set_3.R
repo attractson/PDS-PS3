@@ -196,5 +196,7 @@ fifth
 #6th task
 ## https://www.rdocumentation.org/packages/tm/versions/0.7-7/topics/findFreqTerms
 freq6<-findFreqTerms(fifth, lowfreq = 0.8)
-freq6
-
+freq<-as.matrix(freq6)
+freq[1:50]
+##other way : https://www.rdocumentation.org/packages/tidytext/versions/0.2.2
+##install.packages("tidytext")
