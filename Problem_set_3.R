@@ -65,7 +65,7 @@ object.size(primaryPolls2) # 3982792 bytes
 ### new set is much larger than primarypolls2
 
 
-#Q3
+#Q3 <- Done
 ## Initial setup
 library(fivethirtyeight)
 library(tidyverse)
@@ -122,8 +122,7 @@ p
 
 #darkmode
 p+theme_dark()
-p+xlab("Candidate Name")+
-  theme_classic() +
+p+ theme_classic() +
   labs(title="Endorsements of Candidates",x="Candidate", y="Endorsement", color = "Candidates") +
   theme(axis.text.x=element_text(angle=20, hjust=1, size=9)) 
   
