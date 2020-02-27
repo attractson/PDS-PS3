@@ -103,7 +103,7 @@ unique(combined_dateset$candidate_name)
 ## [1] "Bernard Sanders"     "Pete Buttigieg"      "Joseph R. Biden Jr."
 ## [4] "Amy Klobuchar"       "Elizabeth Warren" 
 colnames(Endorsements)
-colnames(combined_dateset)
+colnames(combined_dataset)
 ## Number of endorsement
 ## using count - part of dpylr-
 endorsementnumber <- combined_dataset %>%
