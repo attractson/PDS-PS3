@@ -41,7 +41,7 @@ plot2
 
 ##   
 
-# Q2
+# Q2 <- Done
 library(dplyr)
 library(tidyverse)
 ##same initial set up with q1
@@ -66,18 +66,71 @@ object.size(primaryPolls2) # 3982792 bytes
 
 
 #Q3
+## Initial setup
 library(fivethirtyeight)
 library(tidyverse)
 polls <- read_csv('https://jmontgomery.github.io/PDS/Datasets/president_primary_polls_feb2020.csv')
 Endorsements <- endorsements_2020
-  
 ## Change the Endorsements variable name endorsee to candidate_name
 Endorsements <- rename(Endorsements, candidate_name = endorsee)
-
 ## Change the Endorsements dataframe into a tibble object.
 Endorsements <- as_tibble(Endorsements)
+## filter the poll var. 6 candidates
+pollSix <- polls %>%
+  filter(candidate_name %in% c("Amy Klobuchar", "Bernard Sanders", "Elizabeth Warren", "Joseph R. Biden Jr.", "Michael Bloomberg", "Pete Buttigieg")) %>%
+  select(candidate_name, sample_size, start_date, party, pct)
+##Comparing the candidate names * two sets
+## check if names are same
+unique(Endorsements$candidate_name)
+## [1] "John Delaney"       "Joe Biden"          "Julian Castro"     
+## [4] "Kamala Harris"      "Bernie Sanders"     "Cory Booker"       
+## [7] "Amy Klobuchar"      "Elizabeth Warren"   "Jay Inslee"        
+## [10] "John Hickenlooper"  "Beto O'Rourke"      "Kirsten Gillibrand"
+## [13] "Pete Buttigieg"     "Eric Swalwell"      "Steve Bullock" 
+unique(pollSix$candidate_name)
+## [1] "Bernard Sanders"     "Pete Buttigieg"      "Joseph R. Biden Jr."
+## [4] "Amy Klobuchar"       "Elizabeth Warren"    "Michael Bloomberg" 
+
+## Biden and sanders are different + Bloomberg not included
+##recode () : https://dplyr.tidyverse.org/reference/recode.html
+Endorsements$candidate_name<-recode(Endorsements$candidate_name, 'Bernie Sanders'='Bernard Sanders')
+Endorsements$candidate_name<-recode(Endorsements$candidate_name, 'Joe Biden'='Joseph R. Biden Jr.')
+
+##combining the candidatenames
+combined_dataset <- pollSix %>%
+  inner_join(Endorsements, by = "candidate_name")
+unique(combined_dateset$candidate_name)
+## [1] "Bernard Sanders"     "Pete Buttigieg"      "Joseph R. Biden Jr."
+## [4] "Amy Klobuchar"       "Elizabeth Warren" 
+colnames(Endorsements)
+colnames(combined_dateset)
+## Number of endorsement
+## using count - part of dpylr-
+endorsementnumber <- combined_dataset %>%
+   count(candidate_name)
+###1	Amy Klobuchar	8740
+###2	Bernard Sanders	15360
+###3	Elizabeth Warren	8667
+###4	Joseph R. Biden Jr.	28159
+###5	Pete Buttigieg	4450
+library(ggplot2)
+colnames(endorsementnumber)
+
+p <- ggplot(data=endorsementnumber) +
+  geom_col(mapping = aes(x=candidate_name, y=n, fill=candidate_name))
+p
+
+#darkmode
+p+theme_dark()
+p+xlab("Candidate Name")+labs(title="Endorsements of Candidates")+
+  theme_classic() +
+  theme(axis.text.x=element_text(angle=20, hjust=1, size=8)) +
+  labs(x="Candidate", y="Endorsement", color = "Candidates", size = 8)+
+  theme_minimal() 
+  
 
 
+## More 
 
 
 #Q4
