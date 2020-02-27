@@ -122,13 +122,11 @@ p
 
 #darkmode
 p+theme_dark()
-p+xlab("Candidate Name")+labs(title="Endorsements of Candidates")+
+p+xlab("Candidate Name")+
   theme_classic() +
-  theme(axis.text.x=element_text(angle=20, hjust=1, size=8)) +
-  labs(x="Candidate", y="Endorsement", color = "Candidates", size = 8)+
-  theme_minimal() 
+  labs(title="Endorsements of Candidates",x="Candidate", y="Endorsement", color = "Candidates") +
+  theme(axis.text.x=element_text(angle=20, hjust=1, size=9)) 
   
-
 
 ## More 
 
